@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IoTMon</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/all.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.flowchart.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    </head>
+    <body>
+        <div class="topbar">
+        </div>
+
+        <div class="main">
+            <div class="login-form">
+                <div class="logo">IoTMon</div>
+                <form action="/login" method="post">
+                    <input class="big-input" type="text" name="username" placeholder="Username">
+                    <input class="big-input" type="password" name="password" placeholder="Password">
+                    <button class="big-button" type="submit">LOGIN</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="rights">® 2022 Developed by Daniel arad</div>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>

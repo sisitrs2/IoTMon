@@ -1,0 +1,157 @@
+
+/* Globals */
+
+body {
+    background-color: rgb(237, 241, 241);
+    color:rgb(75, 75, 75);
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.right {
+    float: right;
+}
+.left{
+    float: left;
+}
+
+.green {
+    color: rgb(51, 161, 51);
+}
+
+.red {
+    color: rgb(214, 37, 37);
+}
+
+.alert {
+    color: rgb(214, 37, 37);
+    text-align: center;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.icon-button {
+    color:rgb(236, 236, 236);
+    background-color: #5f5f5f;
+    display: inline-block;
+    font-size: 17px;
+    width: 40px;
+    height: 40px;
+    padding-top: 8px;
+    text-align: center;
+    border-radius: 30px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.24);
+}
+
+.icon-button:hover {
+    color:rgb(236, 236, 236);
+    filter: brightness(120%);
+}
+
+/* Page */
+
+.topbar {
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    color:rgb(75, 75, 75);
+    background-color: white;
+    top: 0px;
+    left: 0px;
+    display: inline;
+    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.24);
+}
+
+.topbar .logo {
+    font-size: 30px;
+    font-weight: 700;
+    font-family: system-ui;
+    color:rgb(114, 114, 114);
+    padding: 13px 40px;
+    /*border-right: 1px solid #eee;*/
+    float: left;
+}
+
+.topbar .links .link {
+    color:rgb(75, 75, 75);
+    font-weight: 700;
+    font-size: 20px;
+    display: inline-block;
+    height: 70px;
+    border-right: 1px solid #eee;
+    padding: 18px 23px;
+    transition-duration: 0.2s;
+}
+
+.topbar .links .link:hover {
+    border-right: 1px solid #eee;
+}
+
+.topbar .profile a{
+    font-size: 22px;
+    color:rgb(75, 75, 75);
+    font-weight: 700;
+    float: right;
+    padding: 18px 30px;
+}
+
+.topbar .profile a:hover {
+    filter: brightness(120%);
+}
+
+.main {
+    padding: 80px 40px;    
+}
+
+.block {
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.24);
+    margin: 20px 0px 0px 0px;
+    width: calc(100% - 15px);
+    display: inline-block;
+    transition-duration: 0.2s;
+}
+
+.block:hover {
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.24);
+}
+
+.block .head {
+    font-size: 20px;
+    font-weight: 700;
+    padding: 10px 10px 20px;
+    color:rgb(75, 75, 75);
+}
+
+.block .head-line {
+    border-bottom: 1px solid rgb(214, 214, 214);
+}
+
+.block .content table .status {
+    font-weight: 600;
+}
+
+.block .content table tr:hover {
+    box-shadow: 0 0 5px black;
+    cursor: pointer;
+}
+
+
+.rights {
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color:rgba(0, 0, 0, 0.24);
+    font-size: 12px;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IoTMon</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/all.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.flowchart.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class="topbar">
+            <div class="logo">IoTMon</div>
+            <!--div class="links left">
+                <a href="#" class="link">Link 1</a>
+                <a href="#" class="link">Link 2</a>
+                <a href="#" class="link">Link 3</a>
+            </div-->
+            <div class="profile right"><a href="/login">{{ username }}</a></div>
+        </div>
+        <div class="main container-fluid">
+            <div class="row">
+                <div class="col-8">
+                    <div class="block devices">
+                        <div class="head">
+                            <span>Devices Monitoring</span>
+                            <div class="right"><a href="#" class="scan icon-button" title="Run scan"><i class="fas fa-sync-alt"></i></a></div>
+                        </div>
+                        <!--div class="search"></div-->
+                        <div class="content">
+                            <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                {% for device in data %}
+                                  <tr title="{{ device.Link }}">
+                                    <td scope="col">{{ device.Name }}</td>
+                                    <td>{{ device.Address[0] }}</td>
+                                    <td>Data</td>
+                                    <td class="status">{{ device.Status }}</td>
+                                  </tr>
+                                {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="block alerts">
+                        <div class="head head-line">Alerts</div>
+                        <div class="content">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="10%">Status</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for device in data %}
+                                    {% if device.Status == "Down" %}
+                                    <tr title="{{ device.Link }}">
+                                        <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
+                                        <td>{{ device.Name }}</td>
+                                        <td>{{ device.Address[0] }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}    
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rights">® 2022 Developed by Daniel arad</div>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>
