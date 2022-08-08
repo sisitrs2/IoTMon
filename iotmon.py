@@ -5,6 +5,7 @@ from flask_jsglue import JSGlue
 import jwt
 import json
 import sys
+import sqlite3
 from os import  path, listdir, makedirs
 import os
 import csv
@@ -14,6 +15,9 @@ import urllib.parse
 from flask_socketio import SocketIO, emit
 import socketio as client_socket
 
+DB_TABLES = './DB/tables.sql'
+DB_INIT = './DB/init.sql'
+DB = './DB/iotmon.db'
 
 app = Flask(__name__, template_folder="templates")
 jsglue = JSGlue(app)
@@ -112,8 +116,41 @@ def is_logged(logged=False):
         except:
             return False
 
-def init(app):
-    pass
+
+def create_connection(db):
+    """ create a database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db)
+    except Exception as e:
+        print(e)
+        conn.close()
+    return conn
+
+
+def init():
+    """ Create and initialize DB. """
+    with open(DB_TABLES, "r") as table:
+        tables = table.read()
+    with open(DB_INIT, "r") as initialize:
+        init = initialize.read()
+
+    if not os.path.isfile(DB):
+        conn = create_connection(DB)
+        c = conn.cursor()
+        try:
+            c.executescript(tables)
+            print("DB => Tables Created.")
+            c.executescript(init)
+            print("DB => DB Initialized.")
+        except Exception as e:
+            print(e)
+        conn.close()
+    else:
+        print("DB Found.")
+    
+
 
 if __name__ == '__main__':
+    init()
     socketio.run(app, debug=True, host='0.0.0.0', port=5454)
