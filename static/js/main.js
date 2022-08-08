@@ -2,9 +2,9 @@ jQuery(function($) {
 
     $(".status").each(function() {
         var status = this.innerHTML;
-        if (status == "Active") {
+        if (status == "Power") {
             $(this).addClass("green");
-        } else if (status == "Down") {
+        } else if (status == "Battery") {
             $(this).addClass("red");
         } else {
             $(this).addClass("yellow");

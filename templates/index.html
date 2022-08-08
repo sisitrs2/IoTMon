@@ -34,8 +34,11 @@
                                 <thead>
                                   <tr>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Type</th>
                                     <th scope="col">Address</th>
-                                    <th scope="col">Data</th>
+                                    <th scope="col">Temp</th>
+                                    <th scope="col">Voltage</th>
+                                    <th scope="col">Current</th>
                                     <th scope="col">Status</th>
                                   </tr>
                                 </thead>
@@ -43,8 +46,11 @@
                                 {% for device in data %}
                                   <tr title="{{ device.Link }}">
                                     <td scope="col">{{ device.Name }}</td>
-                                    <td>{{ device.Address[0] }}</td>
-                                    <td>Data</td>
+                                    <td>{{ device.Type }}</td>
+                                    <td>{{ device.Address }}</td>
+                                    <td>{{ device.Temperature}}</td>
+                                    <td>{{ device.Voltage }}</td>
+                                    <td>{{ device.Current }}</td>
                                     <td class="status">{{ device.Status }}</td>
                                   </tr>
                                 {% endfor %}
@@ -63,15 +69,17 @@
                                         <th scope="col" width="10%">Status</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Address</th>
+                                        <th scope="col">Info</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for device in data %}
-                                    {% if device.Status == "Down" %}
+                                    {% if device.Status == "Battery" %}
                                     <tr title="{{ device.Link }}">
                                         <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
                                         <td>{{ device.Name }}</td>
-                                        <td>{{ device.Address[0] }}</td>
+                                        <td>{{ device.Address }}</td>
+                                        <td>{{ device.Alarm }}</td>
                                     </tr>
                                     {% endif %}
                                 {% endfor %}    
