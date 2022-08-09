@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/all.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.flowchart.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {{ JSGlue.include() }}
     </head>
     <body>
         <div class="topbar">
@@ -55,16 +56,13 @@
                                     <td scope="col">{{ device.Name }}</td>
                                     <td>{{ device_types[device.TypeID] }}</td>
                                     <td>{{ device.Address }}</td>
-                                    <td>{{ device.Temperature}}</td>
-                                    <td>{{ device.Voltage }}</td>
-                                    <td>{{ device.Current }}</td>
+                                    <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
+                                    <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
+                                    <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
-                                    <th>{{ device.del }}
-                                        <a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)">
-                                            <i class="fas fa-trash"></i>
-                                            </i></a>
-                                    </th>
+                                    <td style="text-align: center;"><a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)"><i class="fas fa-trash"></i></a></td>
+                                    <input type="hidden" class="device-id" value="{{ device.Id }}" />
                                   </tr>
                                 {% endfor %}
                                 </tbody>
