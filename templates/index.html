@@ -26,7 +26,11 @@
                     <div class="block devices">
                         <div class="head">
                             <span>Devices Monitoring</span>
-                            <div class="right"><a href="#" class="scan icon-button" title="Run scan"><i class="fas fa-sync-alt"></i></a></div>
+                            <div class="right">
+                                <!--a href="#" class="scan-button icon-button" title="Run Scan"><i class="fas fa-sync-alt"></i></a-->
+                                <a href="#" class="add-device-button icon-button b-green" title="Add Device"><i class="fas fa-plus"></i></a>
+                                <a href="#" class="add-device-user-button b-blue icon-button" title="Add User"><i class="fas fa-users"></i></a>
+                            </div>
                         </div>
                         <!--div class="search"></div-->
                         <div class="content">
@@ -36,14 +40,14 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Address</th>
-                                    <th scope="col">Temp</th>
                                     <th scope="col">Voltage</th>
                                     <th scope="col">Current</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Last Scan</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                {% for device in data %}
+                                {% for device in devices %}
                                   <tr title="{{ device.Link }}">
                                     <td scope="col">{{ device.Name }}</td>
                                     <td>{{ device.Type }}</td>
@@ -52,6 +56,7 @@
                                     <td>{{ device.Voltage }}</td>
                                     <td>{{ device.Current }}</td>
                                     <td class="status">{{ device.Status }}</td>
+                                    <td>{{ device.LastScan }}</td>
                                   </tr>
                                 {% endfor %}
                                 </tbody>
@@ -73,7 +78,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {% for device in data %}
+                                {% for device in devices %}
                                     {% if device.Status == "Battery" %}
                                     <tr title="{{ device.Link }}">
                                         <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
@@ -89,6 +94,35 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="block add-device">
+            <div class="head">New Device</div>
+            <form action="{{ url_for('add_device') }}" method="post">
+                <input type="text" name="name" placeholder="Name">
+                <input type="text" name="address" placeholder="IP Address">
+                <select name="device_user_id">
+                    {% for user in device_users %}
+                        <option value="{{ user[0] }}">{{ user[2] }} - {{ user[1] }}</option>
+                        <!-- user[2]=type  user[1]=username -->
+                    {% endfor %}
+                </select>
+                <input type="text" name="type" placeholder="Device type">
+                <input type="text" name="version" placeholder="Version">
+                <input type="text" name="link" placeholder="http://1.1.1.1/">
+                <button type="submit">Save</button>
+                <button type="reset" class="cancel b-red">Cancel</button>
+            </form>
+        </div>
+        <div class="block add-device-user">
+            <div class="head">New Device User</div>
+            <form action="{{ url_for('add_device_user') }}" method="post">
+                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="password" placeholder="Password">
+                <input type="text" name="type" placeholder="Device type">
+                <input type="text" name="permissions" placeholder="Permissions">
+                <button type="submit">Save</button>
+                <button type="cancel" class="cancel b-red">Cancel</button>
+            </form>
         </div>
         <div class="rights">® 2022 Developed by Daniel arad</div>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>

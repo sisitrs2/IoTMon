@@ -37,9 +37,7 @@
         "Voltage": "54.14V",
         "Current": "47.00A",
         "Alarm": "Power Outage",
-        "Link": "http://1.1.1.3/",
-        "Username": "admin",
-        "Password": "admin"
+        "Link": "http://1.1.1.3/"
     },
     {
         "Name":"Dev4",
@@ -51,9 +49,7 @@
         "Voltage": "54.32V",
         "Current": "33.21A",
         "Alarm": "Lorem Ipsum",
-        "Link": "http://1.1.1.4/",
-        "Username": "admin",
-        "Password": "admin"
+        "Link": "http://1.1.1.4/"
     },
     {
         "Name":"Dev5",
@@ -65,9 +61,7 @@
         "Voltage": "54.17V",
         "Current": "31.14A",
         "Alarm": "Power Outage",
-        "Link": "http://1.1.1.5/",
-        "Username": "admin",
-        "Password": "admin"
+        "Link": "http://1.1.1.5/"
     },
     {
         "Name":"Dev6",
@@ -79,8 +73,6 @@
         "Voltage": "54.53V",
         "Current": "27.00A",
         "Alarm": "Lorem Ipsum",
-        "Link": "http://1.1.1.6/",
-        "Username": "admin",
-        "Password": "admin"
+        "Link": "http://1.1.1.6/"
     }
 ]

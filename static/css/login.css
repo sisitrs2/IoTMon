@@ -117,9 +117,12 @@ a:hover {
     padding: 0 20px 0 38px;
     transition-duration: 0.2s;
     border-radius: 5px;
+    outline: none;
+    border: 1px solid #a1a1a1;
 }
 
-.big-input:active {
+.big-input:focus {
+    border: 1px solid #5f5f5f;
     
 }
 
@@ -146,6 +149,7 @@ a:hover {
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s;
+    outline: none;
 }
 
 .big-button:hover {

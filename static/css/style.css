@@ -26,8 +26,24 @@ a:hover {
     color: rgb(51, 161, 51);
 }
 
+.b-green {
+    background-color: rgb(69, 177, 69) !important;
+}
+
+.b-red {
+    background-color: rgb(187, 55, 55) !important;
+}
+
 .red {
     color: rgb(214, 37, 37);
+}
+
+.blue {
+    color: blue;
+}
+
+.b-blue {
+    background-color: rgb(67, 105, 233) !important;
 }
 
 .alert {
@@ -49,7 +65,8 @@ a:hover {
     padding-top: 8px;
     text-align: center;
     border-radius: 30px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.24);
+    margin-right: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
 }
 
 .icon-button:hover {
@@ -146,6 +163,68 @@ a:hover {
     cursor: pointer;
 }
 
+.block input, select {
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border: 1px solid #a1a1a1;
+    padding: 5px 20px;
+    width: calc(100% - 10px);
+    margin: 5px;
+    transition-duration: 0.2;
+    outline: none;
+}
+
+.block input:focus, select:focus {
+    border: 1px solid rgb(102, 101, 101);
+}
+
+.block button {
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.2;
+    margin-top: 10px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    height: 30px;
+    background-color: rgb(50, 130, 204);
+    border-radius: 5px;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+    outline: none;
+}
+
+.add-device {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    text-align: center;
+    z-index: 900;
+    padding: 10px 20px 30px;
+}
+
+.add-device-user {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    text-align: center;
+    z-index: 900;
+    padding: 10px 20px 30px;
+}
 
 .rights {
     position: fixed;
