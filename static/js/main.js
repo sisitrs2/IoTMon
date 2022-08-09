@@ -7,7 +7,7 @@ jQuery(function($) {
         } else if (status == "Battery") {
             $(this).addClass("red");
         } else {
-            $(this).addClass("yellow");
+            $(this).addClass("orange");
         }
     })
 

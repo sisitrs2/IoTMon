@@ -103,11 +103,15 @@
                 <input type="text" name="address" placeholder="IP Address">
                 <select name="device_user_id">
                     {% for user in device_users %}
-                        <option value="{{ user[0] }}">{{ user[2] }} - {{ user[1] }}</option>
+                        <option value="{{ user[0] }}">{{ device_types[user[2]] }} - {{ user[1] }}</option>
                         <!-- user[2]=type  user[1]=username -->
                     {% endfor %}
                 </select>
-                <input type="text" name="type" placeholder="Device type">
+                <select name="device_type_id">
+                    {% for id in device_types.keys() %}
+                        <option value="{{ id }}">{{ device_types[id] }}</option>
+                    {% endfor %}
+                </select>
                 <input type="text" name="version" placeholder="Version">
                 <input type="text" name="link" placeholder="http://1.1.1.1/">
                 <button type="submit">Save</button>
@@ -119,10 +123,14 @@
             <form action="{{ url_for('add_device_user') }}" method="post">
                 <input type="text" name="username" placeholder="Username">
                 <input type="text" name="password" placeholder="Password">
-                <input type="text" name="type" placeholder="Device type">
+                <select name="device_type_id">
+                    {% for id in device_types.keys() %}
+                        <option value="{{ id }}">{{ device_types[id] }}</option>
+                    {% endfor %}
+                </select>
                 <input type="text" name="permissions" placeholder="Permissions">
                 <button type="submit">Save</button>
-                <button type="cancel" class="cancel b-red">Cancel</button>
+                <button type="reset" class="cancel b-red">Cancel</button>
             </form>
         </div>
         <div class="rights">® 2022 Developed by Daniel arad</div>

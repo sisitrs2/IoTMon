@@ -110,7 +110,7 @@ def add_device():
     username = session['username']
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{ username }';")
     area_id = area_id[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['type'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
+    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
 
     resp = make_response(index())
     return resp
@@ -133,7 +133,7 @@ def add_device_user():
 
     username = session["username"]
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['type'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
+    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
 
     return redirect(request.referrer)
    
