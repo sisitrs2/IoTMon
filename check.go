@@ -1,35 +1,43 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/cookiejar"
 	"sync"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type Device struct {
-	Name        string
-	Address     string
-	Type        string
-	Version     string
-	Status      string
-	Temperature string
-	Voltage     string
-	Current     string
-	Alarm       string
-	Link        string
-	LastScan    string
+	ID           uint
+	Name         string
+	Address      string
+	TypeId       uint
+	Version      string
+	Temperature  string
+	Voltage      string
+	Current      string
+	Status       string
+	Data         string
+	Lastscan     string
+	Link         string
+	DeviceUserId uint
+	AreaId       uint
 }
 
 type DeviceUser struct {
-	Username string
-	Password string
+	Username    string
+	Password    string
+	TypeId      string
+	Permissions string
 }
+const()
+	WITHLOGIN = 1
+	LO
+) 
 
 /*func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
@@ -39,8 +47,8 @@ type DeviceUser struct {
 
 	loginURL := device.Link + doc.Find("Form").AttrOr("action", "")
 	data := url.Values{
-		"username": {device.Username},
-		"password": {device.Password},
+		"username": "ua",
+		"password": "password",
 	}
 	response, err := client.PostForm(loginURL, data)
 
@@ -58,6 +66,8 @@ type DeviceUser struct {
 
 func ScrapeDevice(device *Device) {
 	// Create HTTP Client with Cookie Jar (for login)
+	
+
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
 		Jar: jar,
@@ -65,19 +75,20 @@ func ScrapeDevice(device *Device) {
 	// Request the Device HTML Page.
 	res, err := client.Get(device.Link)
 	if err != nil {
-		device.Status = "Inactive"
-		device.Temperature = "Unknown"
-		device.Voltage = "Unknown"
-		device.Current = "Unknown"
-		device.LastScan = "Unknown"
+		device.Status = "Unaccessable"
+		device.Temperature = ""
+		device.Voltage = ""
+		device.Current = ""
+		device.Lastscan = (time.Now()).Format("2006/01/02 15:04:05")
+
 		return
 	}
 	defer res.Body.Close()
+	if device.TypeId == 1:
+		doc := Login(*device, res, client)
+	if device.Type == 2:
 
-	// Login and Load the Device HTML document
-	//_ = Login(*device, res, client)
-	//TODO: Scrape device
-	device.LastScan = "01/01/1970 00:00:00"
+	device.Lastscan = (time.Now()).Format("2006/01/02 15:04:05")
 }
 
 func main() {
@@ -85,21 +96,21 @@ func main() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	db.AutoMigrate(&Device{})
-
-	var wg sync.WaitGroup
+	//var wg sync.WaitGroup
 	var devices []Device
-	res := db.Find(&devices)
-	fmt.Println(res.)
+	_ = db.Find(&devices)
+	var wg sync.WaitGroup
 
 	for i := 0; i < len(devices); i++ {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
 			ScrapeDevice(&devices[i])
+			fmt.Println(i)
 		}(i)
 	}
 	wg.Wait()
-	newjson, _ := json.MarshalIndent(devices, "", "   ")
-	_ = ioutil.WriteFile("map.json", newjson, 0644)
+	for _, device := range devices {
+		db.Save(&device)
+	}
 }
