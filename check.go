@@ -2,14 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/cookiejar"
-	"net/url"
 	"sync"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -38,6 +35,7 @@ type DeviceUser struct {
 	Permissions string
 }
 
+/*
 func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
@@ -62,14 +60,14 @@ func Login(device Device, res *http.Response, client *http.Client) *goquery.Docu
 		log.Fatal(err)
 	}
 	return doc
-}
+}*/
 
 func ScrapeDevice(device *Device) {
 	// Create HTTP Client with Cookie Jar (for login)
 
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
-		Jar: jar,
+		Jar: jar, Timeout: 2 * time.Second,
 	}
 	// Request the Device HTML Page.
 	res, err := client.Get(device.Link)
@@ -79,19 +77,18 @@ func ScrapeDevice(device *Device) {
 		device.Voltage = ""
 		device.Current = ""
 		device.Lastscan = (time.Now()).Format("2006/01/02 15:04:05")
-
 		return
 	}
 	defer res.Body.Close()
 	if device.TypeId == 1 {
-		doc := Login(*device, res, client)
-		doc = doc
+		//doc := Login(*device, res, client)
+		//doc = doc
 	}
 	if device.TypeId == 2 {
-		return
 	}
 
 	device.Lastscan = (time.Now()).Format("2006/01/02 15:04:05")
+	device.Name = "Ilay"
 }
 
 func main() {
