@@ -47,6 +47,10 @@
                                     <th scope="col">Status</th>
                                     <th scope="col">Last Scan</th>
                                     <th scope="col"></th>
+<<<<<<< Updated upstream
+=======
+                                    
+>>>>>>> Stashed changes
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -60,7 +64,13 @@
                                     <td>{{ device.Current }}</td>
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
-                                    <td><input class="deleteButton" type="button" value="delete" onclick="deleteRow(this)"></td>
+                                    <th>{{ device.del }}
+                                        <button type="button" class="delete-btn">
+                                            <span class="button-del-icon">
+                                                <a href="#" class="add-device-type-button b-red" title="delete"><i class="fas fa-trash"></i></a>
+                                            </span>
+                                        </button>
+                                        </th>
                                   </tr>
                                 {% endfor %}
                                 </tbody>
