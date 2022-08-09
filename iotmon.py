@@ -78,6 +78,15 @@ def login(logged=False):
         resp.set_cookie('iotmon', "")
         return resp
 
+
+
+######################
+#                    #
+#    DB Functions    #
+#                    #
+######################
+
+
 @app.route('/add_device', methods=['POST'])
 def add_device():
     #print("--------")
