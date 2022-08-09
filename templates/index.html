@@ -41,6 +41,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Address</th>
+                                    <th scope="col">Temperature</th>
                                     <th scope="col">Voltage</th>
                                     <th scope="col">Current</th>
                                     <th scope="col">Status</th>
@@ -52,7 +53,7 @@
                                 {% for device in devices %}
                                   <tr title="{{ device.Link }}">
                                     <td scope="col">{{ device.Name }}</td>
-                                    <td>{{ device.Type }}</td>
+                                    <td>{{ device_types[device.TypeID] }}</td>
                                     <td>{{ device.Address }}</td>
                                     <td>{{ device.Temperature}}</td>
                                     <td>{{ device.Voltage }}</td>
@@ -87,7 +88,7 @@
                                         <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
                                         <td>{{ device.Name }}</td>
                                         <td>{{ device.Address }}</td>
-                                        <td>{{ device.Alarm }}</td>
+                                        <td>{{ device.Data }}</td>
                                     </tr>
                                     {% endif %}
                                 {% endfor %}    

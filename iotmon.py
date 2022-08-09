@@ -45,8 +45,9 @@ def index(logged=False):
     #data = get_scan_json()
     devices = get_devices()
     device_users = get_device_users()
+    device_types = get_device_types()
 
-    return render_template('index.html', devices=devices, device_users=device_users, username=session["username"])
+    return render_template('index.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,6 +78,15 @@ def login(logged=False):
         resp = make_response(render_template("login.html"))
         resp.set_cookie('iotmon', "")
         return resp
+
+
+
+######################
+#                    #
+#    DB Functions    #
+#                    #
+######################
+
 
 @app.route('/add_device', methods=['POST'])
 def add_device():
@@ -213,8 +223,15 @@ def db_get(query):
     return result
 
 def get_device_users():
-    users = db_get(f"SELECT id, username, type FROM device_users;")
+    users = db_get(f"SELECT id, username, type_id FROM device_users;")
     return users
+
+def get_device_types():
+    types = db_get(f"SELECT id, name FROM types;")
+    obj_types = {}
+    for typ in types:
+        obj_types[typ[0]] = typ[1]
+    return obj_types
 
 def get_devices():
     username = session["username"]
@@ -231,10 +248,16 @@ def get_devices():
             "Id": device[0],
             "Name": device[1],
             "Address": device[2],
-            "Type": device[3],
+            "TypeID": device[3],
             "Version": device[4],
-            "Link": device[5],
-            "Device_user_id": device[6]
+            "Temperature": device[5],
+            "Voltage": device[6],
+            "Current": device[7],
+            "Status": device[8],
+            "Data": device[9],
+            "LastScan": device[10],
+            "Link": device[11],
+            "Device_user_id": device[12]
         }
         obj_devices.append(obj_device)
 
