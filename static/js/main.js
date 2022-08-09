@@ -11,17 +11,20 @@ jQuery(function($) {
         }
     })
 
-    $("tr").click(function() {
-        var url = this.title;
-        if(url){
-            window.open(url, '_blank').focus();
-        }
-    })
-
     if(window.location.pathname != "/") {
         window.location.href = "/"; 
     }
 });
+
+
+
+$("tr").click(function(e) {
+    var url = this.title;
+    console.log(e.target);
+    if(url && !$(e.target).is("a")){
+        window.open(url, '_blank').focus();
+    }
+})
 
 $(".add-device-button").click(function() {
     $(".add-device").toggle()

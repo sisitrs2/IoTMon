@@ -186,6 +186,11 @@ a:hover {
     border-bottom: 1px solid rgb(214, 214, 214);
 }
 
+.block .content table {
+    word-wrap: break-word;
+    table-layout:fixed
+}
+
 .block .content table .status {
     font-weight: 600;
 }
@@ -193,6 +198,10 @@ a:hover {
 .block .content table tr:hover {
     box-shadow: 0 0 5px black;
     cursor: pointer;
+}
+
+.block .content table td {
+    word-wrap: break-word;
 }
 
 .block input, select {
