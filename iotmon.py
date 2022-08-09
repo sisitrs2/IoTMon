@@ -42,6 +42,11 @@ def index(logged=False):
     #    return render_template('login.html')
     
     #data = get_scan_json()
+    
+    # Remove once is_logged is fixed.
+    if not "username" in session.keys():
+        return render_template('login.html')
+    
     devices = get_devices()
     device_users = get_device_users()
     device_types = get_device_types()
@@ -115,6 +120,28 @@ def add_device():
     return resp
     
 
+@app.route('/remove_device', methods=['POST'])
+def remove_device():
+    #print("--------")
+    #if not is_logged():
+    #    return render_template('login.html')
+    
+    data = request.form.to_dict()
+    if not data:
+        print("ERROR: no data given to remove_device.")
+        resp = make_response(index())
+        return resp
+
+    if not data["id"]:
+        resp = make_response(index())
+        return resp
+
+    db_edit(f"DELETE FROM devices WHERE id='{ data['id'] };")    
+
+    resp = make_response(index())
+    return resp
+
+
 @app.route('/add_device_user', methods=['POST'])
 def add_device_user():
     #if not is_logged():
@@ -137,6 +164,31 @@ def add_device_user():
     resp = make_response(index())
     return resp
    
+
+@app.route('/add_device_type', methods=['POST'])
+def add_device_type():
+    #if not is_logged():
+    #    return render_template('login.html')
+    
+    data = request.form.to_dict()
+    if not data:
+        return redirect(request.referrer)
+
+    if not data["name"]:
+        print("REDIRECT: Incomplete data for add_device_type.")
+        return redirect(request.referrer)
+    
+
+    device_types = get_device_types()
+    for name in device_types.values():
+        if name == data["name"]:
+            print("REDIRECT: Name is already taken.")
+            return redirect(request.referrer)
+
+    db_edit(f"INSERT INTO types(name) VALUES('{ data['name'] }');")    
+
+    resp = make_response(index())
+    return resp
 
 ######################
 #                    #
