@@ -61,12 +61,10 @@
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
                                     <th>{{ device.del }}
-                                        <button type="button" class="delete-btn">
-                                            <span class="button-del-icon">
-                                                <a href="#" class="add-device-type-button b-red" title="delete"><i class="fas fa-trash"></i></a>
-                                            </span>
-                                        </button>
-                                        </th>
+                                        <a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)">
+                                            <i class="fas fa-trash"></i>
+                                            </i></a>
+                                    </th>
                                   </tr>
                                 {% endfor %}
                                 </tbody>

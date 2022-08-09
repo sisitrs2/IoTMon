@@ -34,6 +34,7 @@ a:hover {
     background-color: rgb(187, 55, 55) !important;
 }
 
+
 .purple {
     color: purple;
 }
@@ -85,7 +86,7 @@ a:hover {
 }
 
 .delete-btn {
-    color:rgb(255, 250, 250);
+    color:rgb(203, 3, 3);
     display: inline-block;
     font-size: 17px;
     width: 50px;
@@ -96,10 +97,8 @@ a:hover {
     margin-right: 5px;
 }
 
-.delete-btn .b-red:hover {
-    color: #fff;
-    background-color: rgb(208, 5, 201);
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
+.delete-btn:hover {
+    color: rgb(173, 3, 3);
 }
 
 .icon-button:hover {
@@ -235,10 +234,6 @@ a:hover {
     outline: none;
 }
 
-.deleteButton:hover {
-    background-color: rgb(226, 226, 226);
-    box-shadow: 2px 2px 2px #000;
-}
 
 .add-device, .add-device-user, .add-device-type {
     display: none;
