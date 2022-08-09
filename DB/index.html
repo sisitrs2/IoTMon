@@ -60,11 +60,7 @@
                                     <td>{{ device.Current }}</td>
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
-                                    <th>{{ device.del }}
-                                        <a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)">
-                                            <i class="fas fa-trash"></i>
-                                            </i></a>
-                                    </th>
+                                    <td><input class="deleteButton" type="button" value="delete" onclick="deleteRow(this)"></td>
                                   </tr>
                                 {% endfor %}
                                 </tbody>

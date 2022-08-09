@@ -34,6 +34,7 @@ a:hover {
     background-color: rgb(187, 55, 55) !important;
 }
 
+
 .purple {
     color: purple;
 }
@@ -82,6 +83,22 @@ a:hover {
     border-radius: 30px;
     margin-right: 5px;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
+}
+
+.delete-btn {
+    color:rgb(203, 3, 3);
+    display: inline-block;
+    font-size: 17px;
+    width: 50px;
+    height: 40px;
+    padding-top: 8px;
+    text-align: center;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+.delete-btn:hover {
+    color: rgb(173, 3, 3);
 }
 
 .icon-button:hover {
@@ -169,6 +186,11 @@ a:hover {
     border-bottom: 1px solid rgb(214, 214, 214);
 }
 
+.block .content table {
+    word-wrap: break-word;
+    table-layout:fixed
+}
+
 .block .content table .status {
     font-weight: 600;
 }
@@ -176,6 +198,10 @@ a:hover {
 .block .content table tr:hover {
     box-shadow: 0 0 5px black;
     cursor: pointer;
+}
+
+.block .content table td {
+    word-wrap: break-word;
 }
 
 .block input, select {
@@ -217,6 +243,7 @@ a:hover {
     outline: none;
 }
 
+
 .add-device, .add-device-user, .add-device-type {
     display: none;
     position: fixed;
@@ -228,6 +255,7 @@ a:hover {
     z-index: 900;
     padding: 10px 20px 30px;
 }
+
 
 .rights {
     position: fixed;
