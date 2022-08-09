@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"sync"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -34,22 +37,19 @@ type DeviceUser struct {
 	TypeId      string
 	Permissions string
 }
-const()
-	WITHLOGIN = 1
-	LO
-) 
 
-/*func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
+func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	loginURL := device.Link + doc.Find("Form").AttrOr("action", "")
-	data := url.Values{
-		"username": "ua",
-		"password": "password",
-	}
+
+	data := url.Values{}
+	data.Add("Username", "name")
+	data.Add("Password", "pass")
+
 	response, err := client.PostForm(loginURL, data)
 
 	if err != nil {
@@ -62,11 +62,10 @@ const()
 		log.Fatal(err)
 	}
 	return doc
-}*/
+}
 
 func ScrapeDevice(device *Device) {
 	// Create HTTP Client with Cookie Jar (for login)
-	
 
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
@@ -84,9 +83,13 @@ func ScrapeDevice(device *Device) {
 		return
 	}
 	defer res.Body.Close()
-	if device.TypeId == 1:
+	if device.TypeId == 1 {
 		doc := Login(*device, res, client)
-	if device.Type == 2:
+		doc = doc
+	}
+	if device.TypeId == 2 {
+		return
+	}
 
 	device.Lastscan = (time.Now()).Format("2006/01/02 15:04:05")
 }
