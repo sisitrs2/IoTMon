@@ -26,7 +26,6 @@ socketio = SocketIO(app, cors_allowed_origins="http://localhost")
 # Connect to socket
 sio = client_socket.Client()
 
-
 app.config['SESSION_COOKIE_NAME'] = "iotmon"
 app.secret_key = str(uuid4())  # Nice
 
@@ -39,8 +38,8 @@ connected_hosts = {} # key: host_id. value: last time asked for actions.
 
 @app.route('/')
 def index(logged=False):
-    if not is_logged(logged):
-        return render_template('login.html')
+    #if not is_logged(logged):
+    #    return render_template('login.html')
     
     #data = get_scan_json()
     devices = get_devices()
@@ -103,14 +102,14 @@ def add_device():
     if not data["name"] or not \
         data["address"] or not \
         data["device_user_id"]:
-        print("REDIRECT: Incomplete data for device_add.")
+        print("REDIRECT: Incomplete data for add_device.")
         resp = make_response(index())
         return resp
 
     username = session['username']
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{ username }';")
     area_id = area_id[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
+    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id });")    
 
     resp = make_response(index())
     return resp
@@ -125,17 +124,18 @@ def add_device_user():
     if not data:
         return redirect(request.referrer)
 
-    if not data["name"] or not \
-        data["address"] or not \
-        data["device_user"]:
-        print("REDIRECT: Incomplete data for device_add.")
+    if not data["username"] or not \
+        data["password"] or not \
+        data["device_type_id"]:
+        print("REDIRECT: Incomplete data for add_device_user.")
         return redirect(request.referrer)
 
     username = session["username"]
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id })")    
+    db_edit(f"INSERT INTO device_users(username, password, type_id, permissions) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
 
-    return redirect(request.referrer)
+    resp = make_response(index())
+    return resp
    
 
 ######################

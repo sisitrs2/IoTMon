@@ -11,12 +11,12 @@ INSERT INTO device_users(username, password, type_id, permissions) VALUES("baba"
 INSERT INTO device_users(username, password, type_id, permissions) VALUES("bobo", "bobo", 1, "READ");
 INSERT INTO device_users(username, password, type_id, permissions) VALUES("admin", "admin", 2, "READ");
 INSERT INTO devices(name, address, type_id, version, temperature, voltage, current, status, data, lastscan, link, device_user_id, area_id) 
-VALUES("Baba", "1.1.1.1", 1, "1.0", "26°", "54.23", "34.52", "Battery", "Power Outage", "08/08/2022 12:56:12", "http://1.1.1.1/", 1, 1);
+VALUES("Baba", "1.1.1.1", 1, "1.0", "26°", "54.23V", "34.52A", "Battery", "Power Outage", "08/08/2022 12:56:12", "http://1.1.1.1/", 1, 1);
 INSERT INTO devices(name, address, type_id, version, temperature, voltage, current, status, data, lastscan, link, device_user_id, area_id) 
-VALUES("Baba", "1.1.1.2", 2, "1.0", "23°", "54.52", "54.63", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.2/", 2, 1);
+VALUES("Baba", "1.1.1.2", 2, "1.0", "23°", "54.52V", "54.63A", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.2/", 2, 1);
 INSERT INTO devices(name, address, type_id, version, temperature, voltage, current, status, data, lastscan, link, device_user_id, area_id) 
-VALUES("Baba", "1.1.1.3", 1, "1.0", "29°", "54.65", "35.25", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.3/", 1, 1);
+VALUES("Baba", "1.1.1.3", 1, "1.0", "29°", "54.65V", "35.25A", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.3/", 1, 1);
 INSERT INTO devices(name, address, type_id, version, temperature, voltage, current, status, data, lastscan, link, device_user_id, area_id) 
-VALUES("Baba", "1.1.1.4", 2, "1.0", "29°", "54.87", "25.43", "Battery", "Power Outage", "08/08/2022 12:56:12", "http://1.1.1.4/", 2, 1);
+VALUES("Baba", "1.1.1.4", 2, "1.0", "29°", "54.87V", "25.43A", "Battery", "Power Outage", "08/08/2022 12:56:12", "http://1.1.1.4/", 2, 1);
 INSERT INTO devices(name, address, type_id, version, temperature, voltage, current, status, data, lastscan, link, device_user_id, area_id) 
-VALUES("Baba", "1.1.1.5", 1, "1.0", "25°", "53.92", "55.13", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.5/", 1, 1);
+VALUES("Baba", "1.1.1.5", 1, "1.0", "25°", "53.92V", "55.13A", "Power", "", "08/08/2022 12:56:12", "http://1.1.1.5/", 1, 1);
