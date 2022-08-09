@@ -102,11 +102,6 @@ a:hover {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
 }
 
-button-del-icon {
-    
-}
-
-
 .icon-button:hover {
     color:rgb(236, 236, 236);
     filter: brightness(120%);
@@ -240,15 +235,12 @@ button-del-icon {
     outline: none;
 }
 
-<<<<<<< Updated upstream
-.add-device, .add-device-user, .add-device-type {
-=======
-
 .deleteButton:hover {
     background-color: rgb(226, 226, 226);
     box-shadow: 2px 2px 2px #000;
 }
-.add-device {
+
+.add-device, .add-device-user, .add-device-type {
     display: none;
     position: fixed;
     top: 40%;
@@ -260,18 +252,6 @@ button-del-icon {
     padding: 10px 20px 30px;
 }
 
-.add-device-user {
->>>>>>> Stashed changes
-    display: none;
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    text-align: center;
-    z-index: 900;
-    padding: 10px 20px 30px;
-}
 
 .rights {
     position: fixed;
