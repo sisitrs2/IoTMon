@@ -20,8 +20,7 @@ jQuery(function($) {
 
 $("tr").click(function(e) {
     var url = this.title;
-    console.log(e.target);
-    if(url && !$(e.target).is("a")){
+    if(url && !$(e.target).is("a") && !$(e.target).is("i")){
         window.open(url, '_blank').focus();
     }
 })
@@ -44,6 +43,8 @@ $(".cancel").click(function() {
 })
 
 function deleteRow(r) {
-    var i = r.parentNode.parentNode.rowIndex;
-    document.getElementById("device-table").deleteRow(i)
+    var tr = r.parentNode.parentNode.rowIndex;
+    var id = $(r).parent().parent().find(".device-id").val();
+    document.getElementById("device-table").deleteRow(tr);
+    $.post(Flask.url_for('remove_device', { id: id }));
 }

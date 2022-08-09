@@ -123,18 +123,19 @@ def remove_device():
     #print("--------")
     #if not is_logged():
     #    return render_template('login.html')
-    
-    data = request.form.to_dict()
-    if not data:
-        print("ERROR: no data given to remove_device.")
+
+    if request.method == 'POST':
+        id = request.values.get('id')
+    else:
         resp = make_response(index())
         return resp
 
-    if not data["id"]:
+    if not id:
+        print("ERROR: no id given to remove_device.")
         resp = make_response(index())
         return resp
 
-    db_edit(f"DELETE FROM devices WHERE id='{ data['id'] };")    
+    db_edit(f"DELETE FROM devices WHERE id={ id };")    
 
     resp = make_response(index())
     return resp
