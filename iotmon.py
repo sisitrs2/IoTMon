@@ -1,7 +1,6 @@
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, request, render_template, session, request, redirect, abort, make_response, url_for, send_from_directory
-from flask_jsglue import JSGlue
 import jwt
 import json
 import sys
@@ -20,7 +19,6 @@ DB_INIT = './DB/init.sql'
 DB = './DB/iotmon.db'
 
 app = Flask(__name__, template_folder="templates")
-jsglue = JSGlue(app)
 socketio = SocketIO(app, cors_allowed_origins="http://localhost")
 
 # Connect to socket
