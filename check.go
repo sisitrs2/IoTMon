@@ -2,34 +2,36 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/cookiejar"
-	"net/url"
-	"os"
 	"sync"
 
-	"github.com/PuerkitoBio/goquery"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type Device struct {
-	Name        string `json:"name"`
-	Address     string `json:"address"`
-	Type        string `json:"type"`
-	Version     string `json:"version"`
-	Status      string `json:"status"`
-	Temperature string `json:"temperature"`
-	Voltage     string `json:"voltage"`
-	Current     string `json:"current"`
-	Alarm       string `json:"alarm"`
-	Link        string `json:"link"`
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-	LastScan    string `json:"lastscan"`
+	Name        string
+	Address     string
+	Type        string
+	Version     string
+	Status      string
+	Temperature string
+	Voltage     string
+	Current     string
+	Alarm       string
+	Link        string
+	LastScan    string
 }
 
-func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
+type DeviceUser struct {
+	Username string
+	Password string
+}
+
+/*func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -52,7 +54,7 @@ func Login(device Device, res *http.Response, client *http.Client) *goquery.Docu
 		log.Fatal(err)
 	}
 	return doc
-}
+}*/
 
 func ScrapeDevice(device *Device) {
 	// Create HTTP Client with Cookie Jar (for login)
@@ -73,24 +75,23 @@ func ScrapeDevice(device *Device) {
 	defer res.Body.Close()
 
 	// Login and Load the Device HTML document
-	_ = Login(*device, res, client)
+	//_ = Login(*device, res, client)
 	//TODO: Scrape device
 	device.LastScan = "01/01/1970 00:00:00"
 }
 
 func main() {
-	jsonFile, err := os.Open("map.json")
+	db, err := gorm.Open(sqlite.Open(`DB\iotmon.db`), &gorm.Config{})
 	if err != nil {
-		log.Fatal(err)
+		panic("failed to connect database")
 	}
-	defer jsonFile.Close()
+	db.AutoMigrate(&Device{})
+
 	var wg sync.WaitGroup
-	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var devices []Device
-	err = json.Unmarshal(byteValue, &devices)
-	if err != nil {
-		log.Fatal(err)
-	}
+	res := db.Find(&devices)
+	fmt.Println(res.)
+
 	for i := 0; i < len(devices); i++ {
 		wg.Add(1)
 		go func(i int) {
@@ -101,5 +102,4 @@ func main() {
 	wg.Wait()
 	newjson, _ := json.MarshalIndent(devices, "", "   ")
 	_ = ioutil.WriteFile("map.json", newjson, 0644)
-
 }
