@@ -7,7 +7,7 @@ jQuery(function($) {
         } else if (status == "Battery") {
             $(this).addClass("red");
         } else {
-            $(this).addClass("yellow");
+            $(this).addClass("orange");
         }
     })
 
@@ -17,17 +17,24 @@ jQuery(function($) {
             window.open(url, '_blank').focus();
         }
     })
-    
+
+    if(window.location.pathname != "/") {
+        window.location.href = "/"; 
+    }
 });
 
 $(".add-device-button").click(function() {
     $(".add-device").toggle()
 })
 
-
 $(".add-device-user-button").click(function() {
     $(".add-device-user").toggle()
 })
+
+$(".add-device-type-button").click(function() {
+    $(".add-device-type").toggle()
+})
+
 
 $(".cancel").click(function() {
     $(this).parent().parent().toggle()

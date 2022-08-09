@@ -49,6 +49,10 @@ a:hover {
     color: blue;
 }
 
+.b-grey {
+    background-color: #999;
+}
+
 .b-blue {
     background-color: rgb(67, 105, 233) !important;
 }
@@ -60,6 +64,10 @@ a:hover {
 
 .yellow {
     color: yellow;
+}
+
+.orange {
+    color: orange;
 }
 
 .icon-button {
@@ -209,19 +217,7 @@ a:hover {
     outline: none;
 }
 
-.add-device {
-    display: none;
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    text-align: center;
-    z-index: 900;
-    padding: 10px 20px 30px;
-}
-
-.add-device-user {
+.add-device, .add-device-user, .add-device-type {
     display: none;
     position: fixed;
     top: 40%;
