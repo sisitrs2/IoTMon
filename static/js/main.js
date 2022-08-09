@@ -32,3 +32,8 @@ $(".add-device-user-button").click(function() {
 $(".cancel").click(function() {
     $(this).parent().parent().toggle()
 })
+
+function deleteRow(r) {
+    var i = r.parentNode.parentNode.rowIndex;
+    document.getElementById("device-table").deleteRow(i)
+}
