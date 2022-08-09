@@ -30,11 +30,12 @@
                                 <a href="{{ url_for('index') }}" class="scan-button icon-button" title="Refresh"><i class="fas fa-sync-alt"></i></a>
                                 <a href="#" class="add-device-button icon-button b-green" title="Add Device"><i class="fas fa-plus"></i></a>
                                 <a href="#" class="add-device-user-button b-blue icon-button" title="Add User"><i class="fas fa-users"></i></a>
+                                <a href="#" class="add-device-type-button b-purple icon-button" title="Add User"><i class="fas fa-server"></i></a>
                             </div>
                         </div>
                         <!--div class="search"></div-->
                         <div class="content">
-                            <table class="table table-striped">
+                            <table class="table table-striped" id="device-table">
                                 <thead>
                                   <tr>
                                     <th scope="col">Name</th>
@@ -45,6 +46,7 @@
                                     <th scope="col">Current</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Last Scan</th>
+                                    
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -58,6 +60,7 @@
                                     <td>{{ device.Current }}</td>
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
+                                    <td><input class="deleteButton" type="button" value="delete" onclick="deleteRow(this)"></td>
                                   </tr>
                                 {% endfor %}
                                 </tbody>
@@ -133,7 +136,7 @@
                 <button type="reset" class="cancel b-red">Cancel</button>
             </form>
         </div>
-        <div class="rights">® 2022 Developed by Daniel arad</div>
+        <div class="rights">® 2022 Developed by Baba</div>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
