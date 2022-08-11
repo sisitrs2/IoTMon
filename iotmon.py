@@ -18,6 +18,7 @@ import socketio as client_socket
 DB_TABLES = './DB/tables.sql'
 DB_INIT = './DB/init.sql'
 DB = './DB/iotmon.db'
+COOKIE = 'iotmon'
 
 app = Flask(__name__, template_folder="templates")
 jsglue = JSGlue(app)
@@ -26,7 +27,8 @@ socketio = SocketIO(app, cors_allowed_origins="http://localhost")
 # Connect to socket
 sio = client_socket.Client()
 
-app.config['SESSION_COOKIE_NAME'] = "iotmon"
+
+#app.config['SESSION_COOKIE_NAME'] = COOKIE
 app.secret_key = str(uuid4())  # Nice
 
 clients = {} #key: username; value: list of sockets
@@ -38,14 +40,14 @@ connected_hosts = {} # key: host_id. value: last time asked for actions.
 
 @app.route('/')
 def index(logged=False):
-    #if not is_logged(logged):
-    #    return render_template('login.html')
+    if not is_logged(logged):
+        return render_template('login.html')
     
     #data = get_scan_json()
     
     # Remove once is_logged is fixed.
-    if not "username" in session.keys():
-        return render_template('login.html')
+    #if not "username" in session.keys():
+    #    return render_template('login.html')
     
     devices = get_devices()
     device_users = get_device_users()
@@ -55,11 +57,11 @@ def index(logged=False):
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login(logged=False):
+def login():
 
     if request.method == 'GET':
         resp = make_response(render_template("login.html"))
-        resp.set_cookie('iotmon', "")
+        resp.set_cookie(COOKIE, "")
         return resp
        
     elif request.method == 'POST':
@@ -68,21 +70,20 @@ def login(logged=False):
             uid = validate_user_login(creds)
 
             if uid:
-                print(creds)
                 session["username"] = creds["username"]
                 session["uid"] = uid
                 clients[session["uid"]] = socketio
                 token = jwt.encode({'user': "{}-{}".format(creds['username'], uid), 'exp': datetime.utcnow(
                 ) + timedelta(hours=9)}, app.secret_key)
-                resp = make_response(index(token.decode('UTF-8')))
-                resp.set_cookie('iotmon', token.decode('UTF-8'))
+                print(token)
+                resp = make_response(index(token))
+                resp.set_cookie(COOKIE, token.decode('UTF-8'))
                 return resp
         
         # If the user is not authenticated
         resp = make_response(render_template("login.html"))
-        resp.set_cookie('iotmon', "")
+        resp.set_cookie(COOKIE, "")
         return resp
-
 
 
 ######################
@@ -228,7 +229,9 @@ def get_scan_json():
 def is_logged(logged=False):
     print(" >>>>> In is_logged <<<<<<")
     try:
-        token = request.cookies['iotmin']
+        print(request.cookies)
+        token = request.cookies[COOKIE]
+        print(token)
         if not token:
             print("ERROR: No token.")
         data = jwt.decode(token, app.secret_key)
@@ -237,10 +240,12 @@ def is_logged(logged=False):
     except Exception:
         try:
             data = jwt.decode(logged, app.secret_key)
+            print(data)
             print("Success token decoded.")
             return True
         except:
             print("Failed token decode.")
+            print(logged)
             return False
 
 

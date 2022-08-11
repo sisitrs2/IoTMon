@@ -42,6 +42,10 @@ $(".cancel").click(function() {
     $(this).parent().parent().toggle()
 })
 
+$(".profile").click(function() {
+    document.cookie = ""
+})
+
 function deleteRow(r) {
     var tr = r.parentNode.parentNode.rowIndex;
     var id = $(r).parent().parent().find(".device-id").val();
