@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"sync"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -35,14 +38,13 @@ type DeviceUser struct {
 	Permissions string
 }
 
-/*
 func Login(device Device, res *http.Response, client *http.Client) *goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	loginURL := device.Link + doc.Find("Form").AttrOr("action", "")
+	loginURL := device.Link + doc.Find("Form").T
 
 	data := url.Values{}
 	data.Add("Username", "name")
@@ -59,8 +61,9 @@ func Login(device Device, res *http.Response, client *http.Client) *goquery.Docu
 	if err != nil {
 		log.Fatal(err)
 	}
+	doc.Find("AA")
 	return doc
-}*/
+}
 
 func ScrapeDevice(device *Device) {
 	// Create HTTP Client with Cookie Jar (for login)
