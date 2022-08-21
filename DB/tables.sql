@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     username text NOT NULL,
     password text,
     area_id INTEGER,
+    admin INTEGER NOT NULL DEAFULT 0,
     FOREIGN KEY(area_id) REFERENCES areas(id)
 );
 
@@ -43,4 +44,16 @@ CREATE TABLE IF NOT EXISTS devices (
     FOREIGN KEY(device_user_id) REFERENCES device_users(id),
     FOREIGN KEY(type_id) REFERENCES types(id),
     FOREIGN KEY(area_id) REFERENCES areas(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS alarms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    data text NOT NULL,
+    lastScan text NOT NULL DEFAULT '-',
+    device_id INTEGER NOT NULL,
+    area_id INTEGER NOT NULL,
+    relevant INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY(device_id) REFERENCES types(id),
+    FOREIGN KEY(area_id) REFERENCES types(id)
 );

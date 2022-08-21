@@ -14,16 +14,16 @@
     <body>
         <div class="topbar">
             <div class="logo">IoTMon</div>
-            <!--div class="links left">
-                <a href="#" class="link">Link 1</a>
-                <a href="#" class="link">Link 2</a>
-                <a href="#" class="link">Link 3</a>
-            </div-->
+            <div class="links left">
+                <a href="{{ url_for('devices') }}" class="link">Devices</a>
+                <a href="{{ url_for('users') }}" class="link">Users</a>
+                <a href="{{ url_for('areas') }}" class="link">Areas</a>
+            </div>
             <div class="profile right"><a href="/login">{{ username }}</a></div>
         </div>
         <div class="main container-fluid">
             <div class="row">
-                <div class="col-8">
+                <div class="col-12">
                     <div class="block devices">
                         <div class="head">
                             <span>Devices Monitoring</span>
@@ -65,35 +65,6 @@
                                     <input type="hidden" class="device-id" value="{{ device.Id }}" />
                                   </tr>
                                 {% endfor %}
-                                </tbody>
-                              </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="block alerts">
-                        <div class="head head-line">Alerts</div>
-                        <div class="content">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" width="20%">Status</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Address</th>
-                                        <th scope="col">Info</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for device in devices %}
-                                    {% if device.Status != "Power" %}
-                                    <tr title="{{ device.Link }}">
-                                        <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
-                                        <td>{{ device.Name }}</td>
-                                        <td>{{ device.Address }}</td>
-                                        <td>{{ device.Data }}</td>
-                                    </tr>
-                                    {% endif %}
-                                {% endfor %}    
                                 </tbody>
                               </table>
                         </div>

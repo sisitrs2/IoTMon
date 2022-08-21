@@ -1,5 +1,3 @@
-import eventlet
-eventlet.monkey_patch()
 from flask import Flask, request, render_template, session, request, redirect, abort, make_response, url_for, send_from_directory
 from flask_jsglue import JSGlue
 import jwt
@@ -56,7 +54,6 @@ def index(logged=False):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login(logged=False):
-
     if request.method == 'GET':
         resp = make_response(render_template("login.html"))
         resp.set_cookie('iotmon', "")
@@ -68,7 +65,6 @@ def login(logged=False):
             uid = validate_user_login(creds)
 
             if uid:
-                print(creds)
                 session["username"] = creds["username"]
                 session["uid"] = uid
                 clients[session["uid"]] = socketio
@@ -83,6 +79,29 @@ def login(logged=False):
         resp.set_cookie('iotmon', "")
         return resp
 
+
+@app.route('/admin')
+def admin():
+    devices = get_devices()
+    device_users = get_device_users()
+    device_types = get_device_types()
+
+    return render_template('devices.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"])
+
+
+@app.route('/admin/devices')
+def devices():
+    pass
+
+
+@app.route('/admin/users')
+def users():
+    pass
+
+
+@app.route('/admin/areas')
+def areas():
+    pass
 
 
 ######################
@@ -188,7 +207,7 @@ def add_device_type():
 
     db_edit(f"INSERT INTO types(name) VALUES('{ data['name'] }');")    
 
-    resp = make_response(index())
+    resp = make_response(index(True))
     return resp
 
 ######################
@@ -228,7 +247,8 @@ def get_scan_json():
 def is_logged(logged=False):
     print(" >>>>> In is_logged <<<<<<")
     try:
-        token = request.cookies['iotmin']
+        token = request.cookies['iotmon']
+        print(token)
         if not token:
             print("ERROR: No token.")
         data = jwt.decode(token, app.secret_key)
