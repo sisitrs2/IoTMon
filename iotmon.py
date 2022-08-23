@@ -95,8 +95,13 @@ def admin():
 
 @app.route('/admin/alarms')
 def alarms():
+    devices = get_devices()
+    device_users = get_device_users()
+    device_types = get_device_types()
+    alarms = get_alarms()
     areas = get_areas()
-    return make_response(admin())
+
+    return render_template('alarms.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"], areas=areas, alarms=alarms)
 
 
 @app.route('/admin/devices')
@@ -442,7 +447,6 @@ def get_devices():
         devices = db_get(f"SELECT * FROM devices;")
 
     obj_devices = []
-
     for device in devices:
         obj_device = {
             "Id": device[0],
@@ -463,6 +467,33 @@ def get_devices():
         obj_devices.append(obj_device)
 
     return obj_devices
+
+
+def get_alarms():
+    username = session["username"]
+    if not session["admin"]:
+        area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")
+        if not area_id:
+            print("WARNING: db_get_alarms - empty area_id")
+    
+        area_id = area_id[0][0]
+        alarms = db_get(f"SELECT * FROM alarms WHERE area_id='{area_id}';")
+    else:
+        alarms  = db_get(f"SELECT * FROM alarms;")
+
+    obj_alarms = {}
+    for alarm in alarms:
+        obj_alarm = {
+            "Id": alarm[0],
+            "Data": alarm[1],
+            "LastScan": alarm[2],
+            "Device_id": alarm[3],
+            "Area_id": alarm[4],
+            "Relevant": alarm[5]
+        }
+        obj_alarms[obj_alarm["Device_id"]] = obj_alarm
+
+    return obj_alarms
 
 
 def create_connection():

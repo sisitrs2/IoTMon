@@ -30,10 +30,7 @@
                         <div class="head">
                             <span>Alarms Monitoring</span>
                             <div class="right">
-                                <a href="{{ url_for('index') }}" class="scan-button b-grey icon-button" title="Refresh"><i class="fas fa-sync-alt"></i></a>
-                                <a href="#" class="add-alarm-button icon-button b-green" title="Add Device"><i class="fas fa-plus"></i></a>
-                                <a href="#" class="add-alarm-user-button b-blue icon-button" title="Add User"><i class="fas fa-users"></i></a>
-                                <a href="#" class="add-alarm-type-button b-purple icon-button" title="Add Device Type"><i class="fas fa-server"></i></a>
+                                <a href="{{ url_for('alarms') }}" class="scan-button b-grey icon-button" title="Refresh"><i class="fas fa-sync-alt"></i></a>
                             </div>
                         </div>
                         <!--div class="search"></div-->
@@ -43,33 +40,33 @@
                                 <thead>
                                   <tr>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Type</th>
                                     <th scope="col" width="10%">Address</th>
                                     <th scope="col">Area</th>
+                                    <th scope="col" width="30%">Data</th>
                                     <th scope="col">Celsius</th>
                                     <th scope="col">Voltage</th>
                                     <th scope="col">Current</th>
-                                    <th scope="col" width="10%">Status</th>
                                     <th scope="col" width="10%">Last Scan</th>
-                                    <th scope="col" width="80px">Action</th>
+                                    <th scope="col" width="80px" title="Checking box here will hide the alert from users.">Show</th>
                                   </tr>
                                 </thead>
 
                                 <tbody>
-                                {% for alarm in alarms %}
-                                  <tr title="{{ alarm.Link }}">
-                                    <td scope="col">{{ alarm.Name }}</td>
-                                    <td>{{ device_types[device.TypeID] }}</td>
+                                {% for device in devices %}
+                                  {% if device.Id in alarms %}
+                                  <tr title="{{ device.Link }}">
+                                    <td scope="col">{{ device.Name }}</td>
                                     <td>{{ device.Address }}</td>
-                                    <td>{{ areas[device.Area_id] }}</td>
+                                    <td>{{ areas[device.Id] }}</td>
+                                    <td>{{ alarms[device.Id].Data }}</td>
                                     <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
                                     <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
                                     <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
-                                    <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
-                                    <td style="text-align: center;"><a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)"><i class="fas fa-trash"></i></a></td>
-                                    <input type="hidden" class="alarm-id" value="{{ alarm.Id }}" />
+                                    <td style="text-align: center;"><input type="checkbox" /></td>
+                                    <input type="hidden" class="alarm-id" value="{{ alarms[device.Id].Id }}" />
                                   </tr>
+                                  {% endif %}
                                 {% endfor %}
                                 </tbody>
                               </table>
@@ -85,7 +82,7 @@
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/popper.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <!--script src="{{ url_for('static', filename='js/main.js') }}"></script-->
         <script src="{{ url_for('static', filename='js/socketio.js') }}"></script>
     </body>
 </html>
