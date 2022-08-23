@@ -10,33 +10,36 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.flowchart.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         {{ JSGlue.include() }}
+
     </head>
     <body>
         <div class="topbar">
             <div class="logo">IoTMon</div>
             <div class="links left">
-                <a href="{{ url_for('devices') }}" class="link link-active">Devices</a>
-                <a href="{{ url_for('alarms') }}" class="link">Alarms</a>
+                <a href="{{ url_for('admin') }}" class="link">Devices</a>
+                <a href="{{ url_for('alarms') }}" class="link link-active">Alarms</a>
                 <a href="{{ url_for('system') }}" class="link">System Managements</a>
             </div>
             <div class="profile right"><a href="/login">{{ username }}</a></div>
         </div>
+
         <div class="main container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="block devices">
+                    <div class="block alarms">
                         <div class="head">
-                            <span>Devices Monitoring</span>
+                            <span>Alarms Monitoring</span>
                             <div class="right">
                                 <a href="{{ url_for('index') }}" class="scan-button b-grey icon-button" title="Refresh"><i class="fas fa-sync-alt"></i></a>
-                                <a href="#" class="add-device-button icon-button b-green" title="Add Device"><i class="fas fa-plus"></i></a>
-                                <a href="#" class="add-device-user-button b-blue icon-button" title="Add User"><i class="fas fa-users"></i></a>
-                                <a href="#" class="add-device-type-button b-purple icon-button" title="Add Device Type"><i class="fas fa-server"></i></a>
+                                <a href="#" class="add-alarm-button icon-button b-green" title="Add Device"><i class="fas fa-plus"></i></a>
+                                <a href="#" class="add-alarm-user-button b-blue icon-button" title="Add User"><i class="fas fa-users"></i></a>
+                                <a href="#" class="add-alarm-type-button b-purple icon-button" title="Add Device Type"><i class="fas fa-server"></i></a>
                             </div>
                         </div>
                         <!--div class="search"></div-->
+
                         <div class="content">
-                            <table class="table table-striped clickable" id="device-table">
+                            <table class="table table-striped clickable" id="alarm-table">
                                 <thead>
                                   <tr>
                                     <th scope="col">Name</th>
@@ -51,10 +54,11 @@
                                     <th scope="col" width="80px">Action</th>
                                   </tr>
                                 </thead>
+
                                 <tbody>
-                                {% for device in devices %}
-                                  <tr title="{{ device.Link }}">
-                                    <td scope="col">{{ device.Name }}</td>
+                                {% for alarm in alarms %}
+                                  <tr title="{{ alarm.Link }}">
+                                    <td scope="col">{{ alarm.Name }}</td>
                                     <td>{{ device_types[device.TypeID] }}</td>
                                     <td>{{ device.Address }}</td>
                                     <td>{{ areas[device.Area_id] }}</td>
@@ -64,7 +68,7 @@
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
                                     <td style="text-align: center;"><a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)"><i class="fas fa-trash"></i></a></td>
-                                    <input type="hidden" class="device-id" value="{{ device.Id }}" />
+                                    <input type="hidden" class="alarm-id" value="{{ alarm.Id }}" />
                                   </tr>
                                 {% endfor %}
                                 </tbody>
@@ -74,70 +78,7 @@
                 </div>
             </div>
         </div>
-        <div class="block floating-block add-device">
-            <div class="head">New Device</div>
-            <form action="{{ url_for('add_device') }}" method="post">
-                <input type="text" name="name" placeholder="Name">
-                <input type="text" name="address" placeholder="IP Address">
-                <select name="device_user_id">
-                    {% for user in device_users %}
-                        <option value="{{ user[0] }}">{{ device_types[user[2]] }} - {{ user[1] }}</option>
-                        <!-- user[2]=type  user[1]=username -->
-                    {% endfor %}
-                </select>
-                <input type="text" name="version" placeholder="Version">
-                <input type="text" name="link" placeholder="http://1.1.1.1/">
-                <select name="area_id">
-                    {% for area_id in areas.keys() %}
-                        <option value="{{ area_id }}">{{ areas[area_id] }}</option>
-                        <!-- user[2]=type  user[1]=username -->
-                    {% endfor %}
-                </select>
-                <button type="submit">Save</button>
-                <button type="reset" class="cancel b-red">Cancel</button>
-            </form>
-        </div>
-        <div class="block floating-block add-device-user">
-            <div class="head">New Device User</div>
-            <form action="{{ url_for('add_device_user') }}" method="post">
-                <input type="text" name="username" placeholder="Username">
-                <input type="text" name="password" placeholder="Password">
-                <select name="device_type_id">
-                    {% for id in device_types.keys() %}
-                        <option value="{{ id }}">{{ device_types[id] }}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="permissions" placeholder="Permissions">
-                <button type="submit">Save</button>
-                <button type="reset" class="cancel b-red">Cancel</button>
-            </form>
-        </div>
-        <div class="block floating-block add-device-type">
-            <div class="head">New Device Type</div>
-            <form action="{{ url_for('add_device_type') }}" method="post">
-                <input type="text" name="name" placeholder="Name">
-                <button type="submit">Save</button>
-                <button type="reset" class="cancel b-red">Cancel</button>
-            </form>
-            <div class="content">
-                <br>
-                <br>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Device Names</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for id in device_types.keys()  %}
-                        <tr>
-                            <td>{{ device_types[id] }}</td>
-                        </tr>  
-                    {% endfor %}
-                    </tbody>
-                  </table>
-            </div>
-        </div>
+            
         <div class="rights">® 2022 Developed by Baba</div>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>

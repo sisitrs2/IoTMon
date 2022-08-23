@@ -44,6 +44,8 @@ def index(logged=False):
     # Remove once is_logged is fixed.
     if not "username" in session.keys():
         return render_template('login.html')
+    elif session["admin"] == True:
+        return make_response(admin())
     
     devices = get_devices()
     device_users = get_device_users()
@@ -63,10 +65,11 @@ def login(logged=False):
         creds = request.form.to_dict()
         if creds:
             uid = validate_user_login(creds)
-
+            print(uid)
             if uid:
                 session["username"] = creds["username"]
                 session["uid"] = uid
+                session["admin"] = is_admin(uid)
                 clients[session["uid"]] = socketio
                 token = jwt.encode({'user': "{}-{}".format(creds['username'], uid), 'exp': datetime.utcnow(
                 ) + timedelta(hours=9)}, app.secret_key)
@@ -85,23 +88,28 @@ def admin():
     devices = get_devices()
     device_users = get_device_users()
     device_types = get_device_types()
+    areas = get_areas()
 
-    return render_template('devices.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"])
+    return render_template('devices.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"], areas=areas)
+
+
+@app.route('/admin/alarms')
+def alarms():
+    areas = get_areas()
+    return make_response(admin())
 
 
 @app.route('/admin/devices')
 def devices():
-    pass
+    return make_response(admin())
 
 
-@app.route('/admin/users')
-def users():
-    pass
+@app.route('/admin/system')
+def system():
+    areas = get_areas()
+    users = get_users()
 
-
-@app.route('/admin/areas')
-def areas():
-    pass
+    return render_template('system.html', areas=areas, users=users, username=session["username"])
 
 
 ######################
@@ -131,9 +139,15 @@ def add_device():
         return resp
 
     username = session['username']
-    area_id = db_get(f"SELECT area_id FROM users WHERE username='{ username }';")
-    area_id = area_id[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ data['device_type_id'] }', '{ data['version'] }', '{ data['link'] }', { area_id });")    
+    if "area_id" in data:
+        area_id = data["area_id"]
+    else:
+        area_id = db_get(f"SELECT area_id FROM users WHERE username='{ username }';")
+        area_id = area_id[0][0]
+    
+    device_type_id = db_get(f"SELECT type_id FROM device_users WHERE id='{ data['device_user_id'] }';")
+    device_type_id = device_type_id[0][0]
+    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ device_type_id }', '{ data['version'] }', '{ data['link'] }', { area_id });")    
 
     resp = make_response(index())
     return resp
@@ -161,6 +175,93 @@ def remove_device():
     resp = make_response(index())
     return resp
 
+
+@app.route('/remove_user', methods=['POST'])
+def remove_user():
+    #print("--------")
+    #if not is_logged():
+    #    return render_template('login.html')
+
+    if request.method == 'POST':
+        id = request.values.get('id')
+    else:
+        resp = make_response(system())
+        return resp
+
+    if not id:
+        print("ERROR: no id given to remove_user.")
+        resp = make_response(system())
+        return resp
+
+    db_edit(f"DELETE FROM users WHERE id={ id };")    
+
+    resp = make_response(system())
+    return resp
+
+
+@app.route('/remove_area', methods=['POST'])
+def remove_area():
+    #print("--------")
+    #if not is_logged():
+    #    return render_template('login.html')
+
+    if request.method == 'POST':
+        id = request.values.get('id')
+    else:
+        resp = make_response(system())
+        return resp
+
+    if not id:
+        print("ERROR: no id given to remove_area.")
+        resp = make_response(system())
+        return resp
+
+    db_edit(f"DELETE FROM areas WHERE id={ id };")    
+
+    resp = make_response(system())
+    return resp
+
+@app.route('/add_area', methods=['POST'])
+def add_area():
+    #if not is_logged():
+    #    return render_template('login.html')
+    
+    data = request.form.to_dict()
+    if not data:
+        return redirect(request.referrer)
+
+    if not data["name"]:
+        print("REDIRECT: Incomplete data for add_area.")
+        return redirect(request.referrer)
+
+    db_edit(f"INSERT INTO areas(name) VALUES('{ data['name'] }');")    
+
+    resp = make_response(system())
+    return resp
+   
+
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    #if not is_logged():
+    #    return render_template('login.html')
+    
+    data = request.form.to_dict()
+    if not data:
+        return redirect(request.referrer)
+
+    if not data["username"] or not \
+        data["password"] or not \
+        data["admin"]:
+        print("REDIRECT: Incomplete data for add_user.")
+        return redirect(request.referrer)
+
+    username = session["username"]
+    area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
+    db_edit(f"INSERT INTO users(username, password, area_id, admin) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
+
+    resp = make_response(system())
+    return resp
+   
 
 @app.route('/add_device_user', methods=['POST'])
 def add_device_user():
@@ -210,21 +311,23 @@ def add_device_type():
     resp = make_response(index(True))
     return resp
 
-######################
-#                    #
-#    DB Functions    #
-#                    #
-######################
-
 
 def validate_user_login(creds):
     username = creds["username"]
     password = creds["password"]
     user = db_get(f"SELECT id FROM users WHERE username='{ username }' AND password='{ password }';")
     if user:
-        return True
+        return user[0][0]
     else:
         return False
+
+
+def is_admin(uid=False):
+    if not uid:
+        uid = session["uid"]
+    
+    admin = db_get(f"SELECT admin FROM users WHERE id='{ uid }';")
+    return admin[0][0]
 
 
 ######################
@@ -248,7 +351,6 @@ def is_logged(logged=False):
     print(" >>>>> In is_logged <<<<<<")
     try:
         token = request.cookies['iotmon']
-        print(token)
         if not token:
             print("ERROR: No token.")
         data = jwt.decode(token, app.secret_key)
@@ -299,6 +401,27 @@ def get_device_users():
     users = db_get(f"SELECT id, username, type_id FROM device_users;")
     return users
 
+def get_users():
+    users = db_get(f"SELECT * FROM users;")
+    obj_users = []
+    for user in users:
+        obj_user = {
+            "Id": user[0],
+            "Username": user[1],
+            "Password": user[2],
+            "Area_id": user[3],
+            "Admin": user[4]
+        }
+        obj_users.append(obj_user)
+    return obj_users
+
+def get_areas():
+    areas = db_get(f"SELECT id, name FROM areas;")
+    obj_areas = {}
+    for area in areas:
+        obj_areas[area[0]] = area[1]
+    return obj_areas
+
 def get_device_types():
     types = db_get(f"SELECT id, name FROM types;")
     obj_types = {}
@@ -308,12 +431,16 @@ def get_device_types():
 
 def get_devices():
     username = session["username"]
-    area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")
-    if not area_id:
-        print("WARNING: db_get_devices - empty area_id")
+    if not session["admin"]:
+        area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")
+        if not area_id:
+            print("WARNING: db_get_devices - empty area_id")
     
-    area_id = area_id[0][0]
-    devices = db_get(f"SELECT * FROM devices WHERE area_id='{area_id}';")
+        area_id = area_id[0][0]
+        devices = db_get(f"SELECT * FROM devices WHERE area_id='{area_id}';")
+    else:
+        devices = db_get(f"SELECT * FROM devices;")
+
     obj_devices = []
 
     for device in devices:
@@ -330,7 +457,8 @@ def get_devices():
             "Data": device[9],
             "LastScan": device[10],
             "Link": device[11],
-            "Device_user_id": device[12]
+            "Area_id": device[12],
+            "Device_user_id": device[13]
         }
         obj_devices.append(obj_device)
 
