@@ -54,7 +54,7 @@
                                 {% for device in devices %}
                                   <tr title="{{ device.Link }}">
                                     <td scope="col">{{ device.Name }}</td>
-                                    <td>{{ device_types[device.TypeID] }}</td>
+                                    <td>{{ device_types[device.Type_id] }}</td>
                                     <td>{{ device.Address }}</td>
                                     <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
                                     <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
@@ -80,20 +80,24 @@
                                         <th scope="col" width="20%">Status</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Address</th>
-                                        <th scope="col">Info</th>
+                                        <th scope="col" width="40%">Info</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for device in devices %}
-                                    {% if device.Status != "Power" %}
-                                    <tr title="{{ device.Link }}">
-                                        <td class="alert"><i class="fas fa-exclamation-circle"></i></td>
-                                        <td>{{ device.Name }}</td>
-                                        <td>{{ device.Address }}</td>
-                                        <td>{{ device.Data }}</td>
-                                    </tr>
-                                    {% endif %}
-                                {% endfor %}    
+                                  {% if device.Id in alarms %}
+                                    {% for alarm in alarms[device.Id] %}
+                                      {% if alarm.Relevant == 1%}
+                                        <tr title="{{ device.Link }}">
+                                            <td class="device-alert"><i class="fas fa-exclamation-circle"></i></td>
+                                            <td scope="col">{{ device.Name }}</td>
+                                            <td>{{ device.Address }}</td>
+                                            <td>{{ alarm.Data }}</td>
+                                        </tr>
+                                      {% endif %}
+                                    {% endfor %}
+                                  {% endif %}
+                                {% endfor %}
                                 </tbody>
                               </table>
                         </div>

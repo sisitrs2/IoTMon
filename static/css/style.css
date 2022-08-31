@@ -58,7 +58,7 @@ a:hover {
     background-color: rgb(67, 105, 233) !important;
 }
 
-.alert {
+.device-alert {
     color: rgb(214, 37, 37);
     text-align: center;
 }
@@ -111,7 +111,7 @@ a:hover {
 .topbar {
     width: 100%;
     height: 70px;
-    position: fixed;
+    position: absolute;
     color:rgb(75, 75, 75);
     background-color: white;
     top: 0px;
@@ -273,6 +273,11 @@ a:hover {
     -moz-transition: all 0.4s;
     transition: all 0.4s;
     outline: none;
+}
+
+.block .relevant-checkbox {
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 .rights {

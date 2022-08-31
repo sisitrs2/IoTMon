@@ -1,5 +1,5 @@
 
-$("devices tr").click(function(e) {
+$(".clickable tr").click(function(e) {
     var url = this.title;
     if(url && !$(e.target).is("a") && !$(e.target).is("i")){
         window.open(url, '_blank').focus();

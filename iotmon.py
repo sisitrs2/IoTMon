@@ -50,8 +50,19 @@ def index(logged=False):
     devices = get_devices()
     device_users = get_device_users()
     device_types = get_device_types()
+    alarms = get_alarms()
 
-    return render_template('index.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"])
+    # Show only relevant alerts.
+    for device in devices:
+        if device["Id"] in alarms.keys():
+            status = "OK"
+            for alarm in alarms[device["Id"]]:
+                if alarm["Relevant"] == 1:
+                    status = device["Status"]
+                    break
+            device["Status"] = status
+
+    return render_template('index.html', devices=devices, device_users=device_users, device_types=device_types, username=session["username"], alarms=alarms)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -85,6 +96,9 @@ def login(logged=False):
 
 @app.route('/admin')
 def admin():
+    #if not is_logged():
+    #    return render_template('login.html')
+
     devices = get_devices()
     device_users = get_device_users()
     device_types = get_device_types()
@@ -152,7 +166,7 @@ def add_device():
     
     device_type_id = db_get(f"SELECT type_id FROM device_users WHERE id='{ data['device_user_id'] }';")
     device_type_id = device_type_id[0][0]
-    db_edit(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ device_type_id }', '{ data['version'] }', '{ data['link'] }', { area_id });")    
+    db_set(f"INSERT INTO devices(name, address, device_user_id, type_id, version, link, area_id) VALUES('{ data['name'] }', '{ data['address'] }', { data['device_user_id'] }, '{ device_type_id }', '{ data['version'] }', '{ data['link'] }', { area_id });")    
 
     resp = make_response(index())
     return resp
@@ -175,7 +189,7 @@ def remove_device():
         resp = make_response(index())
         return resp
 
-    db_edit(f"DELETE FROM devices WHERE id={ id };")    
+    db_set(f"DELETE FROM devices WHERE id={ id };")    
 
     resp = make_response(index())
     return resp
@@ -198,7 +212,7 @@ def remove_user():
         resp = make_response(system())
         return resp
 
-    db_edit(f"DELETE FROM users WHERE id={ id };")    
+    db_set(f"DELETE FROM users WHERE id={ id };")    
 
     resp = make_response(system())
     return resp
@@ -221,7 +235,7 @@ def remove_area():
         resp = make_response(system())
         return resp
 
-    db_edit(f"DELETE FROM areas WHERE id={ id };")    
+    db_set(f"DELETE FROM areas WHERE id={ id };")    
 
     resp = make_response(system())
     return resp
@@ -239,7 +253,7 @@ def add_area():
         print("REDIRECT: Incomplete data for add_area.")
         return redirect(request.referrer)
 
-    db_edit(f"INSERT INTO areas(name) VALUES('{ data['name'] }');")    
+    db_set(f"INSERT INTO areas(name) VALUES('{ data['name'] }');")    
 
     resp = make_response(system())
     return resp
@@ -262,7 +276,7 @@ def add_user():
 
     username = session["username"]
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
-    db_edit(f"INSERT INTO users(username, password, area_id, admin) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
+    db_set(f"INSERT INTO users(username, password, area_id, admin) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
 
     resp = make_response(system())
     return resp
@@ -285,7 +299,7 @@ def add_device_user():
 
     username = session["username"]
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
-    db_edit(f"INSERT INTO device_users(username, password, type_id, permissions) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
+    db_set(f"INSERT INTO device_users(username, password, type_id, permissions) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
 
     resp = make_response(index())
     return resp
@@ -311,10 +325,38 @@ def add_device_type():
             print("REDIRECT: Name is already taken.")
             return redirect(request.referrer)
 
-    db_edit(f"INSERT INTO types(name) VALUES('{ data['name'] }');")    
+    db_set(f"INSERT INTO types(name) VALUES('{ data['name'] }');")    
 
     resp = make_response(index(True))
     return resp
+
+
+@app.route('/toggle_relevant', methods=['POST'])
+def toggle_relevant():
+
+    if request.method == 'POST':
+        id = request.values.get('id')
+    else:
+        resp = make_response(alarms())
+        return resp
+
+    if not id:
+        print("REDIRECT: Incomplete data for toggle_alarm.")
+        return redirect(request.referrer)
+    
+    relevant = db_get(f"SELECT relevant FROM alarms WHERE id={ id };")
+    if not relevant:
+        return redirect(request.referrer)
+    
+    relevant = relevant[0][0]
+    if relevant:
+        relevant = 0
+    else:
+        relevant = 1
+    
+    db_set(f"UPDATE alarms SET relevant={ relevant } WHERE id={ id };")
+    return redirect(request.referrer)
+
 
 
 def validate_user_login(creds):
@@ -377,7 +419,7 @@ def is_logged(logged=False):
 #                      #
 ########################
 
-def db_edit(query):
+def db_set(query):
     """
     Like db_get() but with commit to change the db and returns the id of the row
     That the Action took place
@@ -452,7 +494,7 @@ def get_devices():
             "Id": device[0],
             "Name": device[1],
             "Address": device[2],
-            "TypeID": device[3],
+            "Type_id": device[3],
             "Version": device[4],
             "Temperature": device[5],
             "Voltage": device[6],
@@ -491,7 +533,9 @@ def get_alarms():
             "Area_id": alarm[4],
             "Relevant": alarm[5]
         }
-        obj_alarms[obj_alarm["Device_id"]] = obj_alarm
+        if obj_alarm["Device_id"] not in obj_alarms:
+            obj_alarms[obj_alarm["Device_id"]] = []
+        obj_alarms[obj_alarm["Device_id"]].append(obj_alarm)
 
     return obj_alarms
 

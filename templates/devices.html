@@ -55,7 +55,7 @@
                                 {% for device in devices %}
                                   <tr title="{{ device.Link }}">
                                     <td scope="col">{{ device.Name }}</td>
-                                    <td>{{ device_types[device.TypeID] }}</td>
+                                    <td>{{ device_types[device.Type_id] }}</td>
                                     <td>{{ device.Address }}</td>
                                     <td>{{ areas[device.Area_id] }}</td>
                                     <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
