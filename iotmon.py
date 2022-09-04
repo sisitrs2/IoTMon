@@ -276,7 +276,7 @@ def add_user():
 
     username = session["username"]
     area_id = db_get(f"SELECT area_id FROM users WHERE username='{username}';")[0][0]
-    db_set(f"INSERT INTO users(username, password, area_id, admin) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['device_type_id'] }', '{ data['permissions'] }');")    
+    db_set(f"INSERT INTO users(username, password, area_id, admin) VALUES('{ data['username'] }', '{ data['password'] }', '{ data['area_id'] }', { data['admin'] });")    
 
     resp = make_response(system())
     return resp
@@ -496,15 +496,16 @@ def get_devices():
             "Address": device[2],
             "Type_id": device[3],
             "Version": device[4],
-            "Temperature": device[5],
-            "Voltage": device[6],
-            "Current": device[7],
-            "Status": device[8],
-            "Data": device[9],
-            "LastScan": device[10],
-            "Link": device[11],
-            "Area_id": device[12],
-            "Device_user_id": device[13]
+            "Batteries": device[5],
+            "Temperature": device[6],
+            "Voltage": device[7],
+            "Current": device[8],
+            "Status": device[9],
+            "Data": device[10],
+            "LastScan": device[11],
+            "Link": device[12],
+            "Area_id": device[13],
+            "Device_user_id": device[14]
         }
         obj_devices.append(obj_device)
 

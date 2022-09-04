@@ -1,3 +1,19 @@
+jQuery(function($) {
+    $(".celsius").each(function() {
+        var cel = this.innerHTML;
+        if (parseInt(cel) >= 29) {
+            $(this).parent().addClass("red");
+        }
+    })
+
+    $(".voltage").each(function() {
+        var vol = this.innerHTML;
+        console.log(parseFloat(vol));
+        if (parseFloat(vol) <= 54 || parseFloat(vol) >= 55) {
+            $(this).parent().addClass("red");
+        }
+    })
+});
 
 $(".clickable tr").click(function(e) {
     var url = this.title;

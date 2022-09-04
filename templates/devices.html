@@ -43,6 +43,7 @@
                                     <th scope="col">Type</th>
                                     <th scope="col" width="10%">Address</th>
                                     <th scope="col">Area</th>
+                                    <th scope="col">Batteries</th>
                                     <th scope="col">Celsius</th>
                                     <th scope="col">Voltage</th>
                                     <th scope="col">Current</th>
@@ -53,11 +54,12 @@
                                 </thead>
                                 <tbody>
                                 {% for device in devices %}
-                                  <tr title="{{ device.Link }}">
+                                  <tr>
                                     <td scope="col">{{ device.Name }}</td>
                                     <td>{{ device_types[device.Type_id] }}</td>
                                     <td>{{ device.Address }}</td>
                                     <td>{{ areas[device.Area_id] }}</td>
+                                    <td>{{ device.Batteries }}</td>
                                     <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
                                     <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
                                     <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
@@ -144,7 +146,7 @@
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/popper.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/devices.js') }}"></script>
         <script src="{{ url_for('static', filename='js/socketio.js') }}"></script>
     </body>
 </html>

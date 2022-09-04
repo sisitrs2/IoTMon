@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS devices (
     address text NOT NULL,
     type_id INTEGER NOT NULL,
     version text DEFAULT '-',
+    batteries INTEGER DEFAULT '-',
     temperature text DEFAULT '-',
     voltage text DEFAULT '-',
     current text DEFAULT '-',

@@ -42,6 +42,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col" width="15%">Address</th>
+                                    <th scope="col">Batteries</th>
                                     <th scope="col">Celsius</th>
                                     <th scope="col">Voltage</th>
                                     <th scope="col">Current</th>
@@ -56,9 +57,10 @@
                                     <td scope="col">{{ device.Name }}</td>
                                     <td>{{ device_types[device.Type_id] }}</td>
                                     <td>{{ device.Address }}</td>
-                                    <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
-                                    <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
-                                    <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
+                                    <td>{{ device.Batteries }}</td>
+                                    <td><span class="celsius">{{ device.Temperature}}</span>{% if device.Temperature != '-' %}°{% endif %}</td>
+                                    <td><span class="voltage">{{ device.Voltage }}</span>{% if device.Voltage != '-' %}V{% endif %}</td>
+                                    <td>{{ device.Current }}{% if device.Current != '-' %}A{% endif %}</td>
                                     <td class="status">{{ device.Status }}</td>
                                     <td>{{ device.LastScan }}</td>
                                     <td style="text-align: center;"><a href="#" title="delete" class="delete-btn " onclick="deleteRow(this)"><i class="fas fa-trash"></i></a></td>

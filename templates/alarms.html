@@ -43,6 +43,7 @@
                                     <th scope="col" width="10%">Address</th>
                                     <th scope="col">Types</th>
                                     <th scope="col">Area</th>
+                                    <th scope="col">Batteries</th>
                                     <th scope="col" width="30%">Data</th>
                                     <th scope="col">Celsius</th>
                                     <th scope="col">Voltage</th>
@@ -61,9 +62,10 @@
                                           <td>{{ device.Address }}</td>
                                           <td>{{ device_types[device.Type_id] }}</td>
                                           <td>{{ areas[device.Area_id] }}</td>
+                                          <td>{{ device.Batteries }}</td>
                                           <td>{{ alarm.Data }}</td>
-                                          <td>{{ device.Temperature}}{% if device.Temperature != '-' %}°{% endif %}</td>
-                                          <td>{{ device.Voltage }}{% if device.Temperature != '-' %}V{% endif %}</td>
+                                          <td><span class="celsius">{{ device.Temperature}}</span>{% if device.Temperature != '-' %}°{% endif %}</td>
+                                          <td><span class="voltage">{{ device.Voltage }}</span>{% if device.Temperature != '-' %}V{% endif %}</td>
                                           <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
                                           <td>{{ device.LastScan }}</td>
                                           <td style="text-align: center;"><input type="checkbox" onclick="toggleRelevant(this)" class="relevant-checkbox" {% if alarm.Relevant %}checked{% endif %}/></td>
