@@ -44,7 +44,8 @@ func Login(device Device, res *http.Response, client *http.Client) *goquery.Docu
 		log.Fatal(err)
 	}
 
-	loginURL := device.Link + doc.Find("Form").T
+	loginURL := device.Link + doc.Closest()
+	//Find("Form")
 
 	data := url.Values{}
 	data.Add("Username", "name")
