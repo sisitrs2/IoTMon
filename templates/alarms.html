@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IoTMon</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1-dist/css/all.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.flowchart.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {{ JSGlue.include() }}
+
+    </head>
+    <body>
+        <div class="topbar">
+            <div class="logo">IoTMon</div>
+            <div class="links left">
+                <a href="{{ url_for('admin') }}" class="link">Devices</a>
+                <a href="{{ url_for('alarms') }}" class="link link-active">Alarms</a>
+                <a href="{{ url_for('system') }}" class="link">System Managements</a>
+            </div>
+            <div class="profile right"><a href="/login">{{ username }}</a></div>
+        </div>
+
+        <div class="main container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="block alarms">
+                        <div class="head">
+                            <span>Alarms Monitoring</span>
+                            <div class="right">
+                                <a href="{{ url_for('alarms') }}" class="scan-button b-grey icon-button" title="Refresh"><i class="fas fa-sync-alt"></i></a>
+                            </div>
+                        </div>
+                        <!--div class="search"></div-->
+
+                        <div class="content">
+                            <table class="table table-striped clickable" id="alarm-table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col" width="10%">Address</th>
+                                    <th scope="col">Types</th>
+                                    <th scope="col">Area</th>
+                                    <th scope="col">Batteries</th>
+                                    <th scope="col" width="30%">Data</th>
+                                    <th scope="col">Celsius</th>
+                                    <th scope="col">Voltage</th>
+                                    <th scope="col">Current</th>
+                                    <th scope="col" width="10%">Last Scan</th>
+                                    <th scope="col" width="70px" title="Checking box here will hide the alert from users.">Show</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for device in devices %}
+                                  {% if device.Id in alarms %}
+                                    {% for alarm in alarms[device.Id] %}
+                                      <tr title="{{ device.Link }}">
+                                          <td scope="col">{{ device.Name }}</td>
+                                          <td>{{ device.Address }}</td>
+                                          <td>{{ device_types[device.Type_id] }}</td>
+                                          <td>{{ areas[device.Area_id] }}</td>
+                                          <td>{{ device.Batteries }}</td>
+                                          <td>{{ alarm.Data }}</td>
+                                          <td><span class="celsius">{{ device.Temperature}}</span>{% if device.Temperature != '-' %}°{% endif %}</td>
+                                          <td><span class="voltage">{{ device.Voltage }}</span>{% if device.Temperature != '-' %}V{% endif %}</td>
+                                          <td>{{ device.Current }}{% if device.Temperature != '-' %}A{% endif %}</td>
+                                          <td>{{ device.LastScan }}</td>
+                                          <td style="text-align: center;"><input type="checkbox" onclick="toggleRelevant(this)" class="relevant-checkbox" {% if alarm.Relevant %}checked{% endif %}/></td>
+                                          <input type="hidden" class="alarm-id" value="{{ alarm.Id }}" />
+                                      </tr>
+                                    {% endfor %}
+                                  {% endif %}
+                                {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="rights">® 2022 Developed by Baba</div>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery-3.4.1.slim.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap-4.4.1-dist/js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/alarms.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/socketio.js') }}"></script>
+    </body>
+</html>

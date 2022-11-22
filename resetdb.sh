@@ -1,0 +1,1 @@
+rm DB/iotmon.db

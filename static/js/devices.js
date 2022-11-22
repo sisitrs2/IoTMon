@@ -1,3 +1,5 @@
+
+
 jQuery(function($) {
 
     $(".status").each(function() {
@@ -27,19 +29,16 @@ jQuery(function($) {
             $(this).parent().addClass("red");
         }
     })
-
-    if(window.location.pathname != "/") {
-        window.location.href = "/"; 
-    }
 });
 
 
 
 $(".clickable tr").click(function(e) {
-    var url = this.title;
-    if(url && !$(e.target).is("a") && !$(e.target).is("i")){
-        window.open(url, '_blank').focus();
-    }
+    var id = $(this).find(".device-id").val();
+    console.log(id);
+    //if(url && !$(e.target).is("a") && !$(e.target).is("i")){
+    //    window.open(url, '_blank').focus();
+    //}
 })
 
 $(".add-device-button").click(function() {
@@ -57,10 +56,6 @@ $(".add-device-type-button").click(function() {
 
 $(".cancel").click(function() {
     $(this).parent().parent().toggle()
-})
-
-$(".profile").click(function() {
-    document.cookie = ""
 })
 
 function deleteRow(r) {
