@@ -2,29 +2,12 @@ jQuery(function($) {
 
     $(".status").each(function() {
         var status = this.innerHTML;
-        if (status == "OK") {
+        if (status == "Power") {
             $(this).addClass("green");
-        } else if (status == "Alert") {
+        } else if (status == "Battery") {
             $(this).addClass("red");
-        } else if (status == "-") {
-            // pass
         } else {
             $(this).addClass("orange");
-        }
-    })
-
-    $(".celsius").each(function() {
-        var cel = this.innerHTML;
-        if (parseInt(cel) >= 29) {
-            $(this).parent().addClass("red");
-        }
-    })
-
-    $(".voltage").each(function() {
-        var vol = this.innerHTML;
-        console.log(parseFloat(vol));
-        if (parseFloat(vol) <= 54 || parseFloat(vol) >= 55) {
-            $(this).parent().addClass("red");
         }
     })
 
@@ -35,7 +18,7 @@ jQuery(function($) {
 
 
 
-$(".clickable tr").click(function(e) {
+$("tr").click(function(e) {
     var url = this.title;
     if(url && !$(e.target).is("a") && !$(e.target).is("i")){
         window.open(url, '_blank').focus();
