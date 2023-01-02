@@ -12,10 +12,12 @@ from uuid import uuid4
 import urllib.parse
 from flask_socketio import SocketIO, emit
 import socketio as client_socket
+from functools import wraps
 
 DB_TABLES = './DB/tables.sql'
 DB_INIT = './DB/init.sql'
 DB = './DB/iotmon.db'
+COOKIE = 'iotmon'
 
 app = Flask(__name__, template_folder="templates")
 jsglue = JSGlue(app)
@@ -24,27 +26,46 @@ socketio = SocketIO(app, cors_allowed_origins="http://localhost")
 # Connect to socket
 sio = client_socket.Client()
 
-app.config['SESSION_COOKIE_NAME'] = "iotmon"
+app.config['SESSION_COOKIE_NAME'] = "session"
 app.secret_key = str(uuid4())  # Nice
 
 clients = {} #key: username; value: list of sockets
 #/SocketIO
 connected_hosts = {} # key: host_id. value: last time asked for actions.
 
+def jwt_required(adminonly):
+    def jwt_required_decorator(func):
+        @wraps(func)
+        def decorator(*args, **kwargs):
+                if COOKIE in request.cookies:
+                    token = request.cookies.get(COOKIE)
+                    try:
+                        data = jwt.decode(token, app.secret_key,algorithms=["HS256"],options={"require": ["exp"]})
+                        if adminonly:
+                            print(data)
+                            return func(data['username']) if data['admin'] == 1 else render_template('login.html')
+                        return func(data['username'],data['admin'])
+                    except Exception as e:
+                        return render_template('login.html'),403
+                return render_template('login.html'),403
+        return decorator
+    return jwt_required_decorator
 
 #### Pages ####
 
 @app.route('/')
-def index(logged=False):
+@jwt_required(False)
+def index(*args, **kwargs):
     #if not is_logged(logged):
-    #    return render_template('login.html')
+        #return render_template('login.html')
     
     #data = get_scan_json()
     
     # Remove once is_logged is fixed.
-    if not "username" in session.keys():
-        return render_template('login.html')
-    elif session["admin"] == True:
+    #print(session.keys())
+    #if not "username" in session.keys():
+    #    return render_template('login.html')
+    if session["admin"] == True:
         return make_response(admin())
     
     devices = get_devices()
@@ -69,7 +90,7 @@ def index(logged=False):
 def login(logged=False):
     if request.method == 'GET':
         resp = make_response(render_template("login.html"))
-        resp.set_cookie('iotmon', "")
+        resp.set_cookie(COOKIE, "")
         return resp
        
     elif request.method == 'POST':
@@ -82,22 +103,30 @@ def login(logged=False):
                 session["uid"] = uid
                 session["admin"] = is_admin(uid)
                 clients[session["uid"]] = socketio
-                token = jwt.encode({'user': "{}-{}".format(creds['username'], uid), 'exp': datetime.utcnow(
-                ) + timedelta(hours=9)}, app.secret_key)
-                resp = make_response(index(token.decode('UTF-8')))
-                resp.set_cookie('iotmon', token.decode('UTF-8'))
+                payload_data = {
+                    "uid": uid,
+                    "username": creds['username'],
+                    "exp": datetime.utcnow() + timedelta(hours=9),
+                    "admin": session["admin"]
+                    }
+                #token = jwt.encode({'user': "{}-{}".format(creds['username'], uid), 'exp': datetime.utcnow(
+                #) + timedelta(hours=9)}, app.secret_key)
+                token = jwt.encode(payload=payload_data,key=app.secret_key)
+                resp = make_response(index())
+                resp.set_cookie(COOKIE, token.decode('UTF-8'),secure=True,httponly=True)
                 return resp
         
         # If the user is not authenticated
         resp = make_response(render_template("login.html"))
-        resp.set_cookie('iotmon', "")
+        resp.set_cookie(COOKIE, "")
         return resp
 
 
 @app.route('/admin')
-def admin():
+@jwt_required(True)
+def admin(*args, **kwargs):
     #if not is_logged():
-    #    return render_template('login.html')
+        #return render_template('login.html')
 
     devices = get_devices()
     device_users = get_device_users()
@@ -108,7 +137,8 @@ def admin():
 
 
 @app.route('/admin/alarms')
-def alarms():
+@jwt_required(True)
+def alarms(*args, **kwargs):
     devices = get_devices()
     device_users = get_device_users()
     device_types = get_device_types()
@@ -119,15 +149,16 @@ def alarms():
 
 
 @app.route('/admin/devices')
-def devices():
+@jwt_required(True)
+def devices(*args, **kwargs):
     return make_response(admin())
 
 
 @app.route('/admin/system')
-def system():
+@jwt_required(True)
+def system(*args, **kwargs):
     areas = get_areas()
     users = get_users()
-
     return render_template('system.html', areas=areas, users=users, username=session["username"])
 
 
@@ -139,7 +170,8 @@ def system():
 
 
 @app.route('/add_device', methods=['POST'])
-def add_device():
+@jwt_required(False)
+def add_device(*args, **kwargs):
     #print("--------")
     #if not is_logged():
     #    return render_template('login.html')
@@ -173,7 +205,8 @@ def add_device():
     
 
 @app.route('/remove_device', methods=['POST'])
-def remove_device():
+@jwt_required(False)
+def remove_device(*args, **kwargs):
     #print("--------")
     #if not is_logged():
     #    return render_template('login.html')
@@ -196,7 +229,8 @@ def remove_device():
 
 
 @app.route('/remove_user', methods=['POST'])
-def remove_user():
+@jwt_required(True)
+def remove_user(*args, **kwargs):
     #print("--------")
     #if not is_logged():
     #    return render_template('login.html')
@@ -219,7 +253,8 @@ def remove_user():
 
 
 @app.route('/remove_area', methods=['POST'])
-def remove_area():
+@jwt_required(True)
+def remove_area(*args, **kwargs):
     #print("--------")
     #if not is_logged():
     #    return render_template('login.html')
@@ -241,7 +276,8 @@ def remove_area():
     return resp
 
 @app.route('/add_area', methods=['POST'])
-def add_area():
+@jwt_required(True)
+def add_area(*args, **kwargs):
     #if not is_logged():
     #    return render_template('login.html')
     
@@ -256,11 +292,14 @@ def add_area():
     db_set(f"INSERT INTO areas(name) VALUES('{ data['name'] }');")    
 
     resp = make_response(system())
+   
+    
     return resp
    
 
 @app.route('/add_user', methods=['POST'])
-def add_user():
+@jwt_required(True)
+def add_user(*args, **kwargs):
     #if not is_logged():
     #    return render_template('login.html')
     
@@ -283,7 +322,8 @@ def add_user():
    
 
 @app.route('/add_device_user', methods=['POST'])
-def add_device_user():
+@jwt_required(False)
+def add_device_user(*args, **kwargs):
     #if not is_logged():
     #    return render_template('login.html')
     
@@ -306,7 +346,8 @@ def add_device_user():
    
 
 @app.route('/add_device_type', methods=['POST'])
-def add_device_type():
+@jwt_required(False)
+def add_device_type(*args, **kwargs):
     #if not is_logged():
     #    return render_template('login.html')
     
@@ -332,7 +373,8 @@ def add_device_type():
 
 
 @app.route('/toggle_relevant', methods=['POST'])
-def toggle_relevant():
+@jwt_required(True)
+def toggle_relevant(*args, **kwargs):
 
     if request.method == 'POST':
         id = request.values.get('id')
@@ -383,6 +425,7 @@ def is_admin(uid=False):
 #                    #
 ######################
 
+
 def get_scan_json():
     json_file = open('map.json', 'r')
     json_text = json_file.read()
@@ -397,7 +440,7 @@ def get_scan_json():
 def is_logged(logged=False):
     print(" >>>>> In is_logged <<<<<<")
     try:
-        token = request.cookies['iotmon']
+        token = request.cookies[COOKIE]
         if not token:
             print("ERROR: No token.")
         data = jwt.decode(token, app.secret_key)
@@ -566,7 +609,7 @@ def init():
             c.executescript(tables)
             print("DB => Tables Created.")
             c.executescript(init)
-            print("DB => DB Initialized.")
+            print("DB 0=> DB Initialized.")
         except Exception as e:
             print(e)
         conn.close()
